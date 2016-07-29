@@ -37,7 +37,9 @@ public class FabricPlugin extends CordovaPlugin {
 
 	@Override
 	protected void pluginInitialize() {
-		Fabric.with(this.cordova.getActivity().getApplicationContext(), new Crashlytics(), new Answers());
+		// Remove Fabric.with call because it crashes other plugins using Fabric with a subsequent call
+		// TODO: Uncomment the line below once Fabric adds support for subsequent .with() calls
+		// Fabric.with(this.cordova.getActivity().getApplicationContext(), new Crashlytics(), new Answers());
 	}
 
 	@Override
