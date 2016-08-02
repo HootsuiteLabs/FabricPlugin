@@ -32,6 +32,17 @@ import java.util.Iterator;
 
 import io.fabric.sdk.android.Fabric;
 
+// TODO: Remove below imports once Fabric adds support for subsequent .with() calls
+import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.Callback;
+import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterCore;
+import com.twitter.sdk.android.core.TwitterException;
+import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.core.identity.TwitterLoginButton;
+
+
 public class FabricPlugin extends CordovaPlugin {
 	private final String pluginName = "FabricPlugin";
 
@@ -39,7 +50,17 @@ public class FabricPlugin extends CordovaPlugin {
 	protected void pluginInitialize() {
 		// Remove Fabric.with call because it crashes other plugins using Fabric with a subsequent call
 		// TODO: Uncomment the line below once Fabric adds support for subsequent .with() calls
-		// Fabric.with(this.cordova.getActivity().getApplicationContext(), new Crashlytics(), new Answers());
+		if (!Fabric.isInitialized()) {
+			Fabric.with(cordova.getActivity().getApplicationContext(), new Crashlytics(), new Answers(), new Twitter(new TwitterAuthConfig(getTwitterKey(), getTwitterSecret())));
+		}
+	}
+
+	private String getTwitterKey() {
+		return preferences.getString("TwitterConsumerKey", "");
+	}
+
+	private String getTwitterSecret() {
+		return preferences.getString("TwitterConsumerSecret", "");
 	}
 
 	@Override
